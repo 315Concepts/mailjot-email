@@ -1,0 +1,27 @@
+# Production-style run. Compile the templates and transports first:
+#   npm run template-compiler && npm run transport-compiler
+# Provider credentials are passed through from your shell or a .env file next to this file.
+services:
+  api:
+    build:
+      context: .
+      target: engine
+    image: mailjot:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./dist/templates:/app/templates:ro
+      - ./dist/transports:/app/transports:ro
+      - ./recorded:/app/recorded
+    environment:
+      # Set the below to enable any transport access (security gate)
+      MAILJOT_TRANSPORT_AUTH_TOKEN:
+      # Set the below to enable the included Mailjet transport
+      MAILJET_API_KEY:
+      MAILJET_API_SECRET:
+      RECORDING_DIR: /app/recorded
+      # Log verbosity: trace, debug, info (the default), warn, error, fatal or silent
+      LOG_LEVEL:
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true

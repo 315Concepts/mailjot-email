@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "noEmit": false, "outDir": "dist/templates", "rootDir": "templates" },
+  "include": ["templates"],
+  "exclude": ["templates/**/*.stories.tsx", "templates/**/*.test.ts"]
+}

@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Post-process recorded documents into Ory Kratos Go templates. In every recording under DIR it replaces each
+# stand-in value below with its Go template expression, then renames message.html to email.body.gotmpl,
+# message.txt to email.body.plaintext.gotmpl and writes the subject from message.json to email.subject.gotmpl.
+# Finally message.json is deleted and the recording moves to DIR/<template>, e.g. recorded/ory/verification_valid.
+# Usage: templates/v1/ory/gotmpl [-d DIR] [-g GLOB]      (-h for help)
+set -euo pipefail
+
+# Where to look, and which files.
+DIR="${MAILJOT_GOTMPL_DIR:-./recorded}"
+GLOB="${MAILJOT_GOTMPL_GLOB:-message.*}"
+
+# Stand-in value (what you sent through the sender) -> Go template expression (what Kratos fills in).
+# All caps, so they are easy to spot and to convert; each must be a string the template's schema accepts.
+VALUES=(
+  'VERIFICATION_CODE|{{ .VerificationCode }}'
+  'VERIFICATION_URL|{{ .VerificationURL }}'
+  'RECOVERY_CODE|{{ .RecoveryCode }}'
+  'RECOVERY_URL|{{ .RecoveryURL }}'
+  'LOGIN_CODE|{{ .LoginCode }}'
+  'REGISTRATION_CODE|{{ .RegistrationCode }}'
+  'EXPIRES_IN_MINUTES|{{ .ExpiresInMinutes }}'
+  'CHANGED_AT|{{ .ChangedAt }}'
+  'ADDED_AT|{{ .AddedAt }}'
+)
+
+while getopts "d:g:h" opt; do
+  case $opt in
+    d) DIR=$OPTARG ;;
+    g) GLOB=$OPTARG ;;
+    h) sed -n '2,6p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) exit 2 ;;
+  esac
+done
+
+[ -d "$DIR" ] || { echo "no such directory: $DIR" >&2; exit 1; }
+
+count=0
+while IFS= read -r -d '' file; do
+  for pair in "${VALUES[@]}"; do
+    FROM=${pair%%|*} TO=${pair#*|} perl -pi -e 's/\Q$ENV{FROM}\E/$ENV{TO}/g' "$file"
+  done
+  echo "processed $file" >&2
+  count=$((count + 1))
+done < <(find "$DIR" -type f -name "$GLOB" -print0)
+
+echo "$count file(s) processed" >&2
+
+# Name the files as Kratos expects them, one recording at a time (a recording is a directory with a message.json).
+while IFS= read -r -d '' json; do
+  dir=$(dirname "$json")
+  template=$(jq -r .template "$json")
+  case $template in ''|/*|*..*) echo "skipping $dir: bad template name" >&2; continue ;; esac
+  jq -j .subject "$json" > "$dir/email.subject.gotmpl"
+  [ -f "$dir/message.html" ] && mv "$dir/message.html" "$dir/email.body.gotmpl"
+  [ -f "$dir/message.txt" ] && mv "$dir/message.txt" "$dir/email.body.plaintext.gotmpl"
+  rm "$json"
+  # A newer recording of the same template replaces the older files.
+  mkdir -p "$DIR/$template"
+  mv -f "$dir"/email.* "$DIR/$template/"
+  rmdir "$dir"
+  echo "$dir -> $DIR/$template" >&2
+done < <(find "$DIR" -type f -name message.json -print0)

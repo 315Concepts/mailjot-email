@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "tsBuildInfoFile": "dist/types/transports.tsbuildinfo",
+    "outDir": "dist/transports",
+    "rootDir": "transports"
+  },
+  "include": ["transports"],
+  "exclude": ["transports/**/*.test.ts", "transports/**/*.test.tsx"],
+  "references": [{ "path": "./tsconfig.engine.json" }]
+}

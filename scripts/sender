@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# Sends through the mailjot sender: renders TEMPLATE and hands it to TRANSPORT, using a JSON body from a file.
+#
+#   MAILJOT_TRANSPORT_AUTH_TOKEN=... scripts/sender                          # Logging transport, accounts/welcome, scripts/sender-data.json
+#   scripts/sender -T Recording                                   # same template, saved to RECORDING_DIR by the server
+#   scripts/sender -T Mailjet -t billing/receipt -f receipt.json  # a different template needs a body that fits it
+#
+# Options (each can also be set through the environment variable shown):
+#   -T TRANSPORT  transport name, matched case-insensitively   MAILJOT_TRANSPORT      (default: Logging)
+#   -t TEMPLATE   template path within the API version         MAILJOT_TEMPLATE       (default: accounts/welcome)
+#   -f FILE       JSON request body, sent as `curl @FILE`      MAILJOT_SENDER_BODY    (default: scripts/sender-data.json)
+#   -u URL        base URL of the service                      MAILJOT_URL            (default: http://localhost:3000)
+#   -h            show this help
+#
+# The body is { "envelope": {...}, "options": {...}?, "input": {...}, "dryRun": bool? }. `input` must match
+# the chosen template's schema (the shipped scripts/sender-data.json fits accounts/welcome). Set "dryRun": true in
+# the file to render and validate without sending. The default transport, Logging, delivers nothing.
+#
+# MAILJOT_TRANSPORT_AUTH_TOKEN (required) is the bearer token the service was started with. It is passed to curl on
+# stdin, so it never appears in the process list, and it is never printed.
+#
+# Exit status: 0 for a 2xx response, 1 for any other response, 2 for a usage problem. The response body goes
+# to stdout (pretty-printed when jq is installed) and the status line to stderr, so output can be piped.
+set -euo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+transport="${MAILJOT_TRANSPORT:-Logging}"
+template="${MAILJOT_TEMPLATE:-accounts/welcome}"
+body="${MAILJOT_SENDER_BODY:-$here/sender-data.json}"
+base="${MAILJOT_URL:-http://localhost:3000}"
+
+usage() { sed -n '2,/^set -euo/{/^set -euo/d;s/^# \{0,1\}//;p;}' "${BASH_SOURCE[0]}"; }
+die() { echo "sender: $*" >&2; exit 2; }
+
+while getopts ":T:t:f:u:h" opt; do
+  case "$opt" in
+    T) transport="$OPTARG" ;;
+    t) template="$OPTARG" ;;
+    f) body="$OPTARG" ;;
+    u) base="$OPTARG" ;;
+    h) usage; exit 0 ;;
+    :) die "option -$OPTARG needs a value (see -h)" ;;
+    *) die "unknown option -$OPTARG (see -h)" ;;
+  esac
+done
+shift $((OPTIND - 1))
+[[ $# -eq 0 ]] || die "unexpected argument '$1' (see -h)"
+
+[[ -n "$transport" ]] || die "the transport is empty"
+[[ -n "$template" ]] || die "the template is empty"
+[[ -f "$body" ]] || die "body file not found: $body"
+[[ -n "${MAILJOT_TRANSPORT_AUTH_TOKEN:-}" ]] || die "MAILJOT_TRANSPORT_AUTH_TOKEN is not set (it must match the service's token)"
+
+url="${base%/}/v1/sender/${transport}/${template#/}"
+response="$(mktemp)"
+trap 'rm -f "$response"' EXIT
+
+# Give curl the Authorization header as config on stdin (-K -) rather than as an argument.
+token="${MAILJOT_TRANSPORT_AUTH_TOKEN//\\/\\\\}"
+token="${token//\"/\\\"}"
+status="$(printf 'header = "Authorization: Bearer %s"\n' "$token" |
+  curl -sS -K - -X POST "$url" \
+    -H 'Content-Type: application/json' \
+    --data-binary "@$body" \
+    -o "$response" -w '%{http_code}')"
+
+echo "POST $url -> HTTP $status" >&2
+if command -v jq >/dev/null 2>&1 && jq . "$response" 2>/dev/null; then :; else cat "$response"; echo; fi
+
+[[ "$status" =~ ^2 ]]

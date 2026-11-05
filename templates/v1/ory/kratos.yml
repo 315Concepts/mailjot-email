@@ -1,0 +1,76 @@
+# The below is just an example for a docker compose volume with the template folders mounted at /etc/config/kratos/emails
+# You must mount & read files per your own environment
+courier:
+  templates:
+    verification:
+      valid:
+        email:
+          subject: file:///etc/config/kratos/emails/verification_valid/email.subject.gotmpl
+          body:
+            html: file:///etc/config/kratos/emails/verification_valid/email.body.gotmpl
+            plaintext: file:///etc/config/kratos/emails/verification_valid/email.body.plaintext.gotmpl
+      invalid:
+        email:
+          subject: file:///etc/config/kratos/emails/verification_invalid/email.subject.gotmpl
+          body:
+            html: file:///etc/config/kratos/emails/verification_invalid/email.body.gotmpl
+            plaintext: file:///etc/config/kratos/emails/verification_invalid/email.body.plaintext.gotmpl
+    verification_code:
+      valid:
+        email:
+          subject: file:///etc/config/kratos/emails/verification_code_valid/email.subject.gotmpl
+          body:
+            html: file:///etc/config/kratos/emails/verification_code_valid/email.body.gotmpl
+            plaintext: file:///etc/config/kratos/emails/verification_code_valid/email.body.plaintext.gotmpl
+      invalid:
+        email:
+          subject: file:///etc/config/kratos/emails/verification_code_invalid/email.subject.gotmpl
+          body:
+            html: file:///etc/config/kratos/emails/verification_code_invalid/email.body.gotmpl
+            plaintext: file:///etc/config/kratos/emails/verification_code_invalid/email.body.plaintext.gotmpl
+    recovery:
+      valid:
+        email:
+          subject: file:///etc/config/kratos/emails/recovery_valid/email.subject.gotmpl
+          body:
+            html: file:///etc/config/kratos/emails/recovery_valid/email.body.gotmpl
+            plaintext: file:///etc/config/kratos/emails/recovery_valid/email.body.plaintext.gotmpl
+      invalid:
+        email:
+          subject: file:///etc/config/kratos/emails/recovery_invalid/email.subject.gotmpl
+          body:
+            html: file:///etc/config/kratos/emails/recovery_invalid/email.body.gotmpl
+            plaintext: file:///etc/config/kratos/emails/recovery_invalid/email.body.plaintext.gotmpl
+    recovery_code:
+      valid:
+        email:
+          subject: file:///etc/config/kratos/emails/recovery_code_valid/email.subject.gotmpl
+          body:
+            html: file:///etc/config/kratos/emails/recovery_code_valid/email.body.gotmpl
+            plaintext: file:///etc/config/kratos/emails/recovery_code_valid/email.body.plaintext.gotmpl
+      invalid:
+        email:
+          subject: file:///etc/config/kratos/emails/recovery_code_invalid/email.subject.gotmpl
+          body:
+            html: file:///etc/config/kratos/emails/recovery_code_invalid/email.body.gotmpl
+            plaintext: file:///etc/config/kratos/emails/recovery_code_invalid/email.body.plaintext.gotmpl
+    login_code:
+      valid:
+        email:
+          subject: file:///etc/config/kratos/emails/login_code_valid/email.subject.gotmpl
+          body:
+            html: file:///etc/config/kratos/emails/login_code_valid/email.body.gotmpl
+            plaintext: file:///etc/config/kratos/emails/login_code_valid/email.body.plaintext.gotmpl
+    registration_code:
+      valid:
+        email:
+          subject: file:///etc/config/kratos/emails/registration_code_valid/email.subject.gotmpl
+          body:
+            html: file:///etc/config/kratos/emails/registration_code_valid/email.body.gotmpl
+            plaintext: file:///etc/config/kratos/emails/registration_code_valid/email.body.plaintext.gotmpl
+    verifiable_address_changed:
+      email:
+        subject: file:///etc/config/kratos/emails/verifiable_address_changed/email.subject.gotmpl
+        body:
+          html: file:///etc/config/kratos/emails/verifiable_address_changed/email.body.gotmpl
+          plaintext: file:///etc/config/kratos/emails/verifiable_address_changed/email.body.plaintext.gotmpl

@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="ERNIUo3pbWtsyRnxcvzh">
+    <mxGraphModel dx="1092" dy="816" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="RUfjykju0iirEnKLmYLr-26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;arcSize=5;" value="" vertex="1">
+          <mxGeometry height="460" width="810" x="100" y="15" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="" vertex="1">
+          <mxGeometry height="120" width="690" x="205" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-18" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="" vertex="1">
+          <mxGeometry height="170" width="690" x="205" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="React&lt;br&gt;Email" vertex="1">
+          <mxGeometry height="60" width="120" x="360" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Zod" vertex="1">
+          <mxGeometry height="60" width="120" x="490" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Express" vertex="1">
+          <mxGeometry height="60" width="120" x="230" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Storybook" vertex="1">
+          <mxGeometry height="60" width="120" x="620" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Faker" vertex="1">
+          <mxGeometry height="60" width="120" x="750" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Document Generation Service" vertex="1">
+          <mxGeometry height="60" width="380" x="230" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Template Development Service" vertex="1">
+          <mxGeometry height="60" width="510" x="360" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="" vertex="1">
+          <mxGeometry height="120" width="690" x="205" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Recording&lt;br&gt;Transport" vertex="1">
+          <mxGeometry height="60" width="100" x="240" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Logging&lt;br&gt;Transport" vertex="1">
+          <mxGeometry height="60" width="100" x="370" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Black Hole&lt;br&gt;Transport" vertex="1">
+          <mxGeometry height="60" width="100" x="500" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-16" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Mailjet&lt;br&gt;Transport" vertex="1">
+          <mxGeometry height="60" width="100" x="630" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-17" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=3" value="Custom&lt;br&gt;Transport" vertex="1">
+          <mxGeometry height="60" width="100" x="760" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-20" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=16;fontStyle=1" value="Libraries" vertex="1">
+          <mxGeometry height="30" width="90" x="110" y="385" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-23" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=16;fontStyle=1" value="Engine" vertex="1">
+          <mxGeometry height="30" width="90" x="110" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="RUfjykju0iirEnKLmYLr-24" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=16;fontStyle=1" value="Transports" vertex="1">
+          <mxGeometry height="30" width="90" x="110" y="75" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

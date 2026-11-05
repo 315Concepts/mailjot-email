@@ -1,0 +1,5 @@
+{
+  "envelope": { "from": { "email": "hi@example.com" }, "to": [{ "email": "alice@example.com" }] },
+  "input": { "verificationCode": "VERIFICATION_CODE", "verificationUrl": "VERIFICATION_URL", "expiresInMinutes": "EXPIRES_IN_MINUTES" },
+  "dryRun": false
+}

@@ -1,0 +1,5 @@
+{
+  "envelope": { "from": { "email": "hi@example.com" }, "to": [{ "email": "alice@example.com" }] },
+  "input": {},
+  "dryRun": false
+}

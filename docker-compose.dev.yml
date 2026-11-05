@@ -1,0 +1,37 @@
+# Development: templates, transports and source are mounted, the API restarts on change, Storybook hot-reloads.
+#   docker compose -f docker-compose.dev.yml up --build
+services:
+  api:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "3000:3000"
+    environment:
+      # Set the below to enable any transport access (security gate)
+      MAILJOT_TRANSPORT_AUTH_TOKEN:
+      # Set the below to enable the included Mailjet transport
+      MAILJET_API_KEY:
+      MAILJET_API_SECRET:
+      # Where the Recording transport saves messages
+      RECORDING_DIR: /app/recorded
+      # Log verbosity: trace, debug, info (the default), warn, error, fatal or silent
+      LOG_LEVEL:
+    volumes: &source
+      - ./engine:/app/engine
+      - ./templates:/app/templates
+      - ./transports:/app/transports
+      - ./storybook:/app/storybook
+      - ./test:/app/test
+      - ./recorded:/app/recorded
+
+  storybook:
+    build:
+      context: .
+      target: dev
+    command: ["npx", "storybook", "dev", "-p", "6006", "--host", "0.0.0.0", "--no-open"]
+    environment:
+      STORYBOOK_DISABLE_TELEMETRY: "1"
+    ports:
+      - "6006:6006"
+    volumes: *source

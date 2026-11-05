@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "composite": true,
+    "declarationDir": "dist/types",
+    "tsBuildInfoFile": "dist/types/engine.tsbuildinfo",
+    "outDir": "dist/engine",
+    "rootDir": "engine"
+  },
+  "include": ["engine"],
+  "exclude": ["engine/**/*.test.ts"]
+}

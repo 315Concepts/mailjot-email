@@ -1,0 +1,18 @@
+{
+  "envelope": {
+    "from": {
+      "email": "hi@example.com",
+      "name": "Mailjot"
+    },
+    "to": [
+      {
+        "email": "alice@example.com",
+        "name": "Alice"
+      }
+    ]
+  },
+  "input": {
+    "name": "Alice"
+  },
+  "dryRun": true
+}

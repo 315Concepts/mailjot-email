@@ -1,0 +1,12 @@
+{
+  "customerName": "Z",
+  "orderNumber": "A-1",
+  "currency": "GBP",
+  "charges": [
+    {
+      "description": "Widget",
+      "quantity": 2,
+      "unitPriceCents": 250
+    }
+  ]
+}

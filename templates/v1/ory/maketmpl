@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Records each Ory template listed in KEYS on a running mailjot server, with the stand-in values that ./gotmpl later turns
+# into Go template expressions. The server must run with the Recording transport configured (RECORDING_DIR).
+#
+#   MAILJOT_TRANSPORT_AUTH_TOKEN=... templates/v1/ory/maketmpl [-u URL]
+#
+# -u URL (or MAILJOT_URL) is the base URL of the service (default: http://localhost:3000).
+# MAILJOT_TRANSPORT_AUTH_TOKEN (required) is the bearer token the server was started with; curl reads it from
+# stdin, so it never appears in the process list, and it is never printed.
+#
+# Each key <k> posts ./<k>.json to the template ory/<k>. The stand-in values in those files must match the VALUES list in ./gotmpl.
+# Exit status: 0 if every response was 2xx, 1 if any was not, 2 for a usage problem.
+set -euo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+base="${MAILJOT_URL:-http://localhost:3000}"
+
+# Template names under ory/, each with a request body of the same name next to this script.
+KEYS=(
+  verification_valid
+  verification_code_valid
+  verification_invalid
+  verification_code_invalid
+  recovery_valid
+  recovery_code_valid
+  recovery_invalid
+  recovery_code_invalid
+  login_code_valid
+  registration_code_valid
+  verifiable_address_changed
+  authenticator_key_added
+)
+
+while getopts ":u:h" opt; do
+  case "$opt" in
+    u) base="$OPTARG" ;;
+    h) sed -n '2,/^set -euo/{/^set -euo/d;s/^# \{0,1\}//;p;}' "${BASH_SOURCE[0]}"; exit 0 ;;
+    *) echo "maketmpl: unknown option (-h for help)" >&2; exit 2 ;;
+  esac
+done
+
+[ -n "${MAILJOT_TRANSPORT_AUTH_TOKEN:-}" ] || { echo "maketmpl: MAILJOT_TRANSPORT_AUTH_TOKEN is not set" >&2; exit 2; }
+
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+failed=0
+for key in "${KEYS[@]}"; do
+  status=$(printf 'Authorization: Bearer %s\n' "$MAILJOT_TRANSPORT_AUTH_TOKEN" |
+    curl -sS -o "$tmp" -w '%{http_code}' -X POST "$base/v1/sender/Recording/ory/$key" \
+      -H @- -H 'Content-Type: application/json' --data-binary "@$here/_bodies/$key.json")
+
+  echo "ory/$key: HTTP $status" >&2
+  if command -v jq >/dev/null; then jq . "$tmp" 2>/dev/null || cat "$tmp"; else cat "$tmp"; fi
+  [[ $status == 2* ]] || failed=1
+done
+exit $failed

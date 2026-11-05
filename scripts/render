@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Renders a template through the mailjot render route: no transport, nothing is sent. The response has the
+# subject, HTML and plaintext. Uses a JSON body from a file.
+#
+#   scripts/render                                              # accounts/welcome, body from scripts/render-data.json
+#   scripts/render -t billing/receipt -f receipt.json           # a different template needs a body that fits it
+#   scripts/render 2>/dev/null | jq -r .html > welcome.html     # just the HTML, ready to open in a browser
+#
+# Options (each can also be set through the environment variable shown):
+#   -t TEMPLATE   template path within the API version         MAILJOT_TEMPLATE      (default: accounts/welcome)
+#   -f FILE       JSON request body, sent as `curl @FILE`      MAILJOT_RENDER_BODY   (default: scripts/render-data.json)
+#   -u URL        base URL of the service                      MAILJOT_URL           (default: http://localhost:3000)
+#   -h            show this help
+#
+# The body is the template's input itself, for example { "name": "Alice" } for accounts/welcome. (The sender
+# wraps it as { "envelope": ..., "input": ... }; the render route does not.) The render route needs no
+# authentication, so no token is used. The body variable is separate from scripts/sender's MAILJOT_SENDER_BODY on
+# purpose: the two scripts expect differently shaped bodies.
+#
+# Exit status: 0 for a 2xx response, 1 for any other response, 2 for a usage problem. The response body goes
+# to stdout (pretty-printed when jq is installed) and the status line to stderr, so output can be piped.
+set -euo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+template="${MAILJOT_TEMPLATE:-accounts/welcome}"
+body="${MAILJOT_RENDER_BODY:-$here/render-data.json}"
+base="${MAILJOT_URL:-http://localhost:3000}"
+
+usage() { sed -n '2,/^set -euo/{/^set -euo/d;s/^# \{0,1\}//;p;}' "${BASH_SOURCE[0]}"; }
+die() { echo "render: $*" >&2; exit 2; }
+
+while getopts ":t:f:u:h" opt; do
+  case "$opt" in
+    t) template="$OPTARG" ;;
+    f) body="$OPTARG" ;;
+    u) base="$OPTARG" ;;
+    h) usage; exit 0 ;;
+    :) die "option -$OPTARG needs a value (see -h)" ;;
+    *) die "unknown option -$OPTARG (see -h)" ;;
+  esac
+done
+shift $((OPTIND - 1))
+[[ $# -eq 0 ]] || die "unexpected argument '$1' (see -h)"
+
+[[ -n "$template" ]] || die "the template is empty"
+[[ -f "$body" ]] || die "body file not found: $body"
+
+url="${base%/}/v1/render/${template#/}"
+response="$(mktemp)"
+trap 'rm -f "$response"' EXIT
+
+status="$(curl -sS -X POST "$url" \
+  -H 'Content-Type: application/json' \
+  --data-binary "@$body" \
+  -o "$response" -w '%{http_code}')"
+
+echo "POST $url -> HTTP $status" >&2
+if command -v jq >/dev/null 2>&1 && jq . "$response" 2>/dev/null; then :; else cat "$response"; echo; fi
+
+[[ "$status" =~ ^2 ]]

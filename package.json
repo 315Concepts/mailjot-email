@@ -1,0 +1,44 @@
+{
+  "name": "mailjot",
+  "version": "0.1.0",
+  "description": "Filesystem-driven email rendering service",
+  "scripts": {
+    "test": "vitest run",
+    "dev": "tsx watch engine/index.ts",
+    "build": "npm run engine-compiler && npm run template-compiler && npm run transport-compiler",
+    "start": "TEMPLATES_DIR=dist/templates TRANSPORTS_DIR=dist/transports RECORDING_DIR=recorded node dist/engine/index.js",
+    "typecheck": "tsc -p tsconfig.json",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "engine-compiler": "tsc -b tsconfig.engine.json",
+    "template-compiler": "tsc -p tsconfig.templates.json",
+    "transport-compiler": "tsc -b tsconfig.transports.json",
+    "coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.3.0",
+    "pino": "^10.4.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-email": "^6.11.6",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.6.0",
+    "@storybook/react": "^10.6.5",
+    "@storybook/react-vite": "^10.6.5",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "^5.0.5",
+    "storybook": "^10.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  },
+  "private": true
+}
